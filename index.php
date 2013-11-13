@@ -1,18 +1,5 @@
 <?php
-
-require_once('incl/Database.php'); 
-
-$host= 'localhost';
-$u= 'USER';
-$p= 'PDUB';
-$d= 'DB';
-
-$db= new Database($d, $u, $p, $host);
-
-$results= $db->query('SELECT makers.name, makers.mID FROM makers'); 
-
-$results= $db->resToArray($results);
-
+require_once('incl/functions.php');
 ?>
 
 <!DOCTYPE html>
@@ -23,17 +10,15 @@ $results= $db->resToArray($results);
 	<body>
 		<?php
 			if(isset($_POST['submit'])){
-				print "<pre>";
-				 print_r($_POST); 
-				print "</pre>";
-				extract($_POST);
-				$price= substr($price, 1);
-				
-				$woo= $db->query("INSERT INTO cigars VALUES('', '$name', '$size', '$strength', '$wrapper', '$price', '$desc', '$maker', 'now()'");
-
-				if($woo){ print "<h3>$name submitted!</h3>"; }
-
-
+				if(!check_cigar($_POST['name'])){
+					add_cigar($_POST);
+				}else{
+					print "<h3>That cigar already exists in the DB</h3>";
+				}
+			}
+			
+			if(isset($_POST['maker_submit'])){
+				add_maker($_POST);
 			}
 		?>
 
@@ -60,7 +45,8 @@ $results= $db->resToArray($results);
 					<select name="maker">
 						<option value="0">Select a Maker</option>
 						<?php
-							foreach($results as $m){
+							$makers= get_info('makers');
+							foreach($makers as $m){
 								print '\t<option value="'.$m['mID']. '">'.$m['name'] .'</option>\n';
 							}
 						?>
@@ -70,6 +56,26 @@ $results= $db->resToArray($results);
 					<input type="submit" name="submit" value="HERF IT!" />
 				</div>
 			</form>
+			
+			
+			<form method="post" name="add_maker">
+				<div>
+					<label for="maker_name">Maker Name:</label> <input type="text" name="maker_name" placeholder="Maker Name" />
+				</div>
+				<div>
+					<label for="location">Location:</label> <input type="text" name="location" placeholder="Location" />
+				</div>				
+				<div>
+					<label for="year">Year Est:</label> <input type="text" name="year" placeholder="Year" />
+				</div>
+				<div>
+					<label for="factories"># Factories:</label> <input type="text" name="factories" placeholder="factories" />
+				</div>
+				<div>
+					<input type="submit" name="maker_submit" value="Add Maker" />
+				</div>
+			</form>
+
 		
 			
 
