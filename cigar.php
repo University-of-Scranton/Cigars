@@ -9,15 +9,18 @@ require_once('incl/functions.php');
 	</head>
 	<body>
 		<?php
-			$query= "SELECT * FROM cigars";
-			$results= $db->query($query); //returns resource
-			$results= $db->resToArray($results); //converts resource to array
 			
-			//print_array($results);
+			if(isset($_GET['id'])){
+				$cigar= get_cigar($_GET['id']);
+				print_array($cigar);
+
+			}else{
+				$results= get_info('cigars');
 			
-			foreach($results as $cigar){
-				print '<p><a href="cigar.php?id='.$cigar['cID'].'">'.$cigar['name'].'</a></p>';
+				foreach($results as $cigar){
+					print '<p><a href="cigar.php?id='.$cigar['cID'].'">'.$cigar['name'].'</a></p>';
 				}
+			}
 			
 		?>
 	

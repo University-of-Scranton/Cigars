@@ -52,11 +52,6 @@ function get_column($query){
         return $data;
 }
 
-function get_row($query){
-	$res= $this->query($query);
-	$res= $this->resToArray($res);
-	return $res[0];	
-}
 
 function get_var($query){
         $res= $this->query($query);

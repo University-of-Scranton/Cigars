@@ -20,12 +20,6 @@ function get_info($table='cigars'){
 	return $db->resToArray($results);
 }
 
-function get_cigar($id){
-	$db= $GLOBALS['db'];
-	$query= "SELECT * FROM cigars WHERE cID='$id'";
-	return $db->get_row($query);
-}
-
 
 function check_cigar($name){
 	$cigars= get_info();
@@ -66,12 +60,6 @@ function add_maker($info){
 		print "<h3>There was an issue: ". mysql_error(). "</h3>";
 		error_log(mysql_error());
 	}
-}
-
-function print_array($a){
-	print "<pre>";
-	print_r($a);
-	print "</pre>";
 }
 
 ?>
