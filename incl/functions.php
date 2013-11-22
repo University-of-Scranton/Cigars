@@ -54,6 +54,27 @@ function add_cigar($info){
 	}
 }
 
+function update_cigar($info){
+	$db= $GLOBALS['db'];
+	
+	foreach($info as $key => $value){
+		$info[$key]= $db->clean($value);
+	}
+	extract($info);
+	
+	$query= "UPDATE cigars SET name='$name', size='$size', strength='$strength', wrapper='$wrapper', price='$price', description='$desc', makerID='$maker', timestamp='now()' WHERE cID='$cID'";
+	
+	$submitted= $db->query($query);
+
+	if($submitted){ 
+		print "<h3>$name updated!</h3>"; 
+	}else{
+		print "<h3>There was an issue: ". mysql_error(). "</h3>";
+		error_log(mysql_error());
+	}
+}
+
+
 function add_maker($info){
 	$db= $GLOBALS['db'];
 	extract($info);
