@@ -3,9 +3,9 @@
 require_once('incl/Database.php'); 
 
 $host= 'localhost';
-$u= 'weekendc_chief';
-$p= 'RPAB2013!';
-$d= 'weekendc_cigars';
+$u= 'root';
+$p= 'root';
+$d= 'cigars';
 
 global $db;
 $db= new Database($d, $u, $p, $host);
