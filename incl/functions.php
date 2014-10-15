@@ -44,14 +44,10 @@ function check_cigar($name){
 function add_cigar($info){
 	$db= $GLOBALS['db'];
 	extract($info);
-	$submitted= $db->query("INSERT INTO cigars VALUES('', '$name', '$size', '$strength', '$wrapper', '$price', '$desc', '$maker', 'now()')");
+	$timestamp= $db->get_mysql_timestamp();
+	$submitted= $db->query("INSERT INTO cigars VALUES('', '$name', '$size', '$strength', '$wrapper', '$price', '$desc', '$maker', '$timestamp')");
 
-	if($submitted){ 
-		print "<h3>$name submitted!</h3>"; 
-	}else{
-		print "<h3>There was an issue: ". mysql_error(). "</h3>";
-		error_log(mysql_error());
-	}
+	echo "<h3>$name submitted!</h3>"; 
 }
 
 function update_cigar($info){
@@ -78,15 +74,11 @@ function update_cigar($info){
 function add_maker($info){
 	$db= $GLOBALS['db'];
 	extract($info);
-	
-	$submitted= $db->query("INSERT INTO makers VALUES('', '$maker_name', '$location', '$year', '$factories', now())");
+	$timestamp= $db->get_mysql_timestamp();
+	$submitted= $db->query("INSERT INTO makers VALUES('', '$maker_name', '$location', '$year', '$factories', '$timestamp')");
 
-	if($submitted){ 
-		print "<h3>$maker_name submitted!</h3>"; 
-	}else{
-		print "<h3>There was an issue: ". mysql_error(). "</h3>";
-		error_log(mysql_error());
-	}
+	echo "<h3>$maker_name submitted!</h3>"; 
+
 }
 
 function print_array($a){

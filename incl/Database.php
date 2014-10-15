@@ -5,9 +5,10 @@ class Database{
         var $password;
         var $host;
         var $lastID;
+        var $dbConn;
 
         //constructor
-        function database($db, $u, $p, $h){
+        function __construct($db, $u, $p, $h){
                 $this->dbName= $db;
                 $this->user= $u;
                 $this->password= $p;
@@ -16,88 +17,82 @@ class Database{
                 //metadata to get entire table list?
         }
 
-//any query
-function query($query){
-                $dbh= mysql_connect ($this->host, $this->user, $this->password) or die ('I cannot connect to the database because: ' . mysql_error());
-                mysql_select_db ($this->dbName) or die ('I cannot connect to the database because: ' . mysql_error());
+        //any query
+        function query($query){
+                        $this->dbConn= new mysqli($this->host, $this->user, $this->password, $this->dbName);
+                        if($this->dbConn->connect_errno > 0){
+                                die('Unable to connect to database [' . $dbh->connect_error . ']');
+                        }
+                        
+                        $result= $this->dbConn->query($query) or die('There was an error running the query [' . $this->dbConn->error . ']');
+                        $this->lastID= $this->dbConn->insert_id;
+                        $this->dbConn->close();
 
-                $result= mysql_query($query, $dbh) or die ('Error: ' . mysql_error());
-                $this->lastID= mysql_insert_id();
-                mysql_close($dbh); 
-
-                return $result;
-}
-
-function resToArray($res){
-        $data= array();
-        while($info= mysql_fetch_assoc($res)){
-                $data[]= $info;
+                        return $result;
         }
 
-        return $data;
-}
+        function resToArray($res){
+                $data= array();
+                while($info= mysqli_fetch_assoc($res)){
+                        $data[]= $info;
+                }
 
-function get_column($query){
-
-        $res= $this->query($query);
-
-        $data= array();
-
-        while($info= mysql_fetch_assoc($res)){
-                $key= array_keys($info);
-                $key= $key[0];
-                $data[]= $info[$key];
+                return $data;
         }
 
-        return $data;
-}
+        function get_column($query){
 
-function get_row($query){
-	$res= $this->query($query);
-	$res= $this->resToArray($res);
-	return $res[0];	
-}
+                $res= $this->query($query);
 
-function get_var($query){
-        $res= $this->query($query);
+                $data= array();
 
-        $info= mysql_fetch_array($res);
-
-        return $info[0];
-}
-
-
-
-        //sanatize data
-        function clean () {
-
-                // count the arguments list
-                $num_args = func_num_args();
-
-                // 1st arg is the string
-                $d = func_get_arg(0);
-
-                // if 2nd exists, get it
-                if ($num_args == 2) {
-                        $s = func_get_arg(1);
+                while($info= mysqli_fetch_assoc($res)){
+                        $key= array_keys($info);
+                        $key= $key[0];
+                        $data[]= $info[$key];
                 }
 
-                // normalize strings
-                if (get_magic_quotes_gpc()) {
-                        $d = stripslashes($d);
-                }
-
-                // remove harmful code
-                if ($s) {
-                        // hardcore cleaning
-                        $d = trim(addslashes(htmlentities(strip_tags($d))));
-                } else {
-                        // lighter duty; use mysql_real_escape_string before sending to database
-                        $d = trim(htmlentities(strip_tags($d)));
-                }
-
-                return $d;
+                return $data;
         }
+
+        function get_row($query){
+                $res= $this->query($query);
+                $res= $this->resToArray($res);
+
+            return ($res == false) ? $res : $res[0];    
+        }
+
+        function get_var($query){
+                $res= $this->query($query);
+
+                $info= mysqli_fetch_array($res);
+
+                return $info[0];
+        }
+
+
+        function get_mysql_timestamp(){
+                return date('Y-m-d H:i:s', time());
+        }
+
+
+        function clean_array($info){
+                foreach($info as $key => $val){
+                        $info["$key"]= $this->clean($val);
+                }
+                
+                return $info;
+        }
+
+
+        function clean($a){
+                $this->dbConn= new mysqli($this->host, $this->user, $this->password, $this->dbName);
+                $a= $this->dbConn->real_escape_string($a);
+                $this->dbConn->close(); 
+            
+                return $a;   
+        }
+
 }
 
 

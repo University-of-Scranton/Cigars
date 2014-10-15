@@ -5,7 +5,7 @@ require_once('incl/functions.php');
 <!DOCTYPE html>
 <html lang="en-us">
 	<head>
-		<title>Manifest Development</title>
+		<title>CIgar Database</title>
 	</head>
 	<body>
 		<?php
