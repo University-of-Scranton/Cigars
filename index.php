@@ -6,8 +6,11 @@ require_once('incl/functions.php');
 <html lang="en-us">
 	<head>
 		<title>CIgar Database</title>
+		<link rel="stylesheet" href="incl/style.css" type='text/css' media='all' />
 	</head>
 	<body>
+
+		<div class="container">
 		<?php
 			if(isset($_POST['submit'])){
 				if(!check_cigar($_POST['name'])){
@@ -22,6 +25,7 @@ require_once('incl/functions.php');
 			}
 		?>
 
+			<div>
 			<form method="post" name="add_cigar">
 				<div>
 					<label for="name">Cigar Name:</label> <input type="text" name="name" placeholder="Cigar Name" />
@@ -56,8 +60,10 @@ require_once('incl/functions.php');
 					<input type="submit" name="submit" value="HERF IT!" />
 				</div>
 			</form>
-			
-			
+			</div>
+
+
+			<div>
 			<form method="post" name="add_maker">
 				<div>
 					<label for="maker_name">Maker Name:</label> <input type="text" name="maker_name" placeholder="Maker Name" />
@@ -75,8 +81,9 @@ require_once('incl/functions.php');
 					<input type="submit" name="maker_submit" value="Add Maker" />
 				</div>
 			</form>
-
+			</div>
 		
+		</div>
 			
 
 	</body>
